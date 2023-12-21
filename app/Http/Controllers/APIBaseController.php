@@ -204,7 +204,7 @@ class APIBaseController extends Controller
     public function setErrors($errorCode, $id = 0)
     {
         switch ($errorCode) {
-            case '400': 
+            case '400':
                 $error = [
                     'message' => 'The request parameters are incorrect, please make sure to follow the documentation.',
                     'code' => 400002
@@ -213,7 +213,7 @@ class APIBaseController extends Controller
                 break;
             case '404':
                 $error = [
-                    'message' => 'The resource that match ID : ({$id}) does not found.',
+                    'message' => 'The resource that match ID : ' . $id . ' does not found.',
                     'code' => 404001
                 ];
                 $this->errors($error);
