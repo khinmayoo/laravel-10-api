@@ -10,6 +10,8 @@ interface ArticleRepositoryInterface
 
     public function getById($id);
 
+    public function findById($id);
+
     public function update($parms, $id);
 
     public function create($params);

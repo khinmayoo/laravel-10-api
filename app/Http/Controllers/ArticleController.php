@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
 use App\Models\Article\ArticleRepositoryInterface;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class ArticleController extends APIBaseController
 {
@@ -59,7 +60,7 @@ class ArticleController extends APIBaseController
     public function show(string $id)
     {
         $article = $this->articleRepository->getById($id);
-        if (empty($article)) {
+        if ($article->empty()) {
             $this->setErrors('404', $id);
             return $this->response('404');
         } else {
@@ -73,7 +74,27 @@ class ArticleController extends APIBaseController
      */
     public function update(Request $request, string $id)
     {
-    
+        $data = $request->only('title', 'body');
+        $validator = Validator::make($data, [
+            'title' => 'unique:articles|max:255',
+        ]);
+
+        //Send failed response if request is not valid
+        if ($validator->fails()) {
+            $this->setErrors('400', $id);
+            return $this->response('400');
+        }
+
+        $article = $this->articleRepository->findById($id);
+
+        if (empty($article)) {
+            $this->setErrors('404', $id);
+            return $this->response('404');
+        } else {
+            $article->update($data);
+            $this->data(['updated' => 1]);
+            return $this->response('200');
+        }
     }
 
     /**
@@ -81,6 +102,14 @@ class ArticleController extends APIBaseController
      */
     public function destroy(string $id)
     {
-        
+        $article = $this->articleRepository->findById($id);
+        if (empty($article)) {
+            $this->setErrors('404', $id);
+            return $this->response('404');
+        } else {
+            $article->delete();
+            $this->data(['deleted' => 1]);
+            return $this->response('200');
+        }
     }
 }

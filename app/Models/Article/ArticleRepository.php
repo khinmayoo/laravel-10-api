@@ -26,14 +26,25 @@ class ArticleRepository implements ArticleRepositoryInterface
     {
         return Article::count();
     }
+    /**
+     *  return collection array
+     */
     public function getById($id)
     {
         return Article::where('id', $id)->get(['id', 'title', 'body']);
     }
 
-    public function update($parms, $id)
+    /**
+     * return model object
+     */
+    public function findById($id)
     {
+        return Article::find($id);
+    }
 
+    public function update($data, $id)
+    {
+        
     }
 
     public function create($data)
