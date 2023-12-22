@@ -60,7 +60,7 @@ class ArticleController extends APIBaseController
     public function show(string $id)
     {
         $article = $this->articleRepository->getById($id);
-        if ($article->empty()) {
+        if ($article->isEmpty()) {
             $this->setErrors('404', $id);
             return $this->response('404');
         } else {
